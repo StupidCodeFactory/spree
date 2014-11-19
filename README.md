@@ -5,7 +5,6 @@ SPREE, PLEASE CONSULT THAT BRANCH'S README AND NOT THIS ONE.**
 SUMMARY
 -------
 
-
 Spree is a complete open source e-commerce solution built with Ruby on Rails. It
 was originally developed by Sean Schofield and is now maintained by a dedicated
 [core team](https://github.com/spree/spree/wiki/Core-Team). You can find out more by
@@ -30,6 +29,8 @@ and perhaps combine it with your own custom backend admin instead of using
 spree_api.
 
 [![Code Climate](https://codeclimate.com/github/spree/spree.png)](https://codeclimate.com/github/spree/spree)
+[![Issue Stats](http://issuestats.com/github/spree/spree/badge/pr)](http://issuestats.com/github/spree/spree)
+[![Issue Stats](http://issuestats.com/github/spree/spree/badge/issue)](http://issuestats.com/github/spree/spree)
 
 Installation
 ------------
@@ -69,18 +70,18 @@ To select a specific branch, pass in the `--branch` option. If there is no branc
 will be given the latest version of either spree_auth_devise or spree_gateway.
 
 ```shell
-spree install my_store --branch "2-3-stable"
+spree install my_store --branch "2-4-stable"
 ```
 
 Using stable builds and bleeding edge
 -------------
 
 To use a stable build of Spree, you can manually add Spree to your
-Rails 4.1.x application. To use the 2-3-stable branch of Spree, add this line to
+Rails application. To use the 2-4-stable branch of Spree, add this line to
 your Gemfile.
 
 ```ruby
-gem 'spree', github: 'spree/spree', branch: '2-3-stable'
+gem 'spree', github: 'spree/spree', branch: '2-4-stable'
 ```
 
 Alternatively, if you want to use the bleeding edge version of Spree, use this
@@ -98,7 +99,7 @@ If you wish to have authentication included also, you will need to add the
 `spree_auth_devise` gem as well. Either this:
 
 ```ruby
-gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-3-stable'
+gem 'spree_auth_devise', github: 'spree/spree_auth_devise', branch: '2-4-stable'
 ```
 
 Or this:
@@ -158,8 +159,6 @@ Browse Admin Interface
 
 http://localhost:nnnn/admin
 
-
-
 Working with the edge source (latest and greatest features)
 -----------------------------------------------------------
 
@@ -204,17 +203,23 @@ your Ruby objects on each request.  The introduction of the asset pipeline in
 Rails 3.1 made default performance in development mode significantly worse. There
 are, however, a few tricks to speeding up performance in development mode.
 
+First, in your `config/development.rb`:
+
+```ruby
+config.assets.debug = false
+```
+
 You can precompile your assets as follows:
 
 ```shell
-bundle exec rake assets:precompile:nondigest
+RAILS_ENV=development bundle exec rake assets:precompile
 ```
 
 If you want to remove precompiled assets (recommended before you commit to Git
 and push your changes) use the following rake task:
 
 ```shell
-bundle exec rake assets:clean
+RAILS_ENV=development bundle exec rake assets:clean
 ```
 
 Use Dedicated Spree Devise Authentication
@@ -330,6 +335,25 @@ Spree roadmap at [https://trello.com/b/PQsUfCL0/spree-roadmap](https://trello.co
 Contributing
 ------------
 
-Spree is an open source project and we encourage contributions. Please see the
-[contributors guidelines](http://spreecommerce.com/documentation/contributing_to_spree.html)
+Spree is an open source project and we encourage contributions. Please review the
+[contributing guidelines](http://guides.spreecommerce.com/developer/contributing.html)
 before contributing.
+
+In the spirit of [free software](http://www.fsf.org/licensing/essays/free-sw.html), **everyone** is encouraged to help improve this project.
+
+Here are some ways **you** can contribute:
+
+* by using prerelease versions / master branch
+* by reporting [bugs](https://github.com/spree/spree/issues/new)
+* by [translating to a new language](https://github.com/spree/spree_i18n/tree/master/config/locales)
+* by writing or editing [documentation](http://guides.spreecommerce.com/developer/contributing.html#contributing-to-the-documentation)
+* by writing [specs](https://github.com/spree/spree/labels/NeedSpecs)
+* by writing [needed code](https://github.com/spree/spree/labels/NeedCode) or [finishing code](https://github.com/spree/spree/labels/stalled)
+* by [refactoring code](https://github.com/spree/spree/labels/performance)
+* by resolving [issues](https://github.com/spree/spree/issues)
+* by reviewing [pull requests](https://github.com/spree/spree/pulls)
+
+License
+-------
+
+Spree is released under the [New BSD License](https://github.com/spree/spree/blob/master/license.md).

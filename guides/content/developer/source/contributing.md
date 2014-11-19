@@ -45,13 +45,13 @@ The important thing is that you communicate your intention in advance of doing a
 
 * Master branch receives *all* patches, including new features and breaking API changes (with deprecation warnings, if necessary).
 
-* One branch "back" from master (currently 2-3-stable) receives patches that fix all bugs, and security issues, and modifications for recently added features (for example, split shipments). Breaking API changes should be avoided, but if unavoidable then a deprecation warning MUST be provided before that change takes place.
+* One branch "back" from master (currently 2-4-stable) receives patches that fix all bugs, and security issues, and modifications for recently added features (for example, split shipments). Breaking API changes should be avoided, but if unavoidable then a deprecation warning MUST be provided before that change takes place.
 
-* Two branches "back" from master (currently 2-2-stable) receives patches for major and minor issues, and security problems. Absolutely no new features, tweaking or API changes.
+* Two branches "back" from master (currently 2-3-stable) receives patches for major and minor issues, and security problems. Absolutely no new features, tweaking or API changes.
 
-* Three branches back from master (currently 2-1-stable) receives patches for major issues and security problems. The severity of an issue will be determined by the person investigating the issue. Absolutely no features, tweaking or API changes.
+* Three branches back from master (currently 2-2-stable) receives patches for major issues and security problems. The severity of an issue will be determined by the person investigating the issue. Absolutely no features, tweaking or API changes.
 
-* Four branches and more "back" from master (currently 2-0-stable and lesser) receive patches only for security issues, as people are still using these branches and may not be able to or wish to upgrade to the latest version of Spree.
+* Four branches and more "back" from master (currently 2-1-stable and lesser) receive patches only for security issues, as people are still using these branches and may not be able to or wish to upgrade to the latest version of Spree.
 
 To determine how often minor branches of Spree are released, please check the [RubyGems version page for Spree](http://rubygems.org/gems/spree/versions).
 
@@ -219,13 +219,13 @@ The GitHub guide on [pull requests](https://help.github.com/articles/using-pull-
 
 ### Contributing to the Documentation
 
-Improvements to the documentation are encouraged. The primary source of documentation are the guides (_HINT: You are reading one now._) The documentation is in its own GitHub project called [spree-guides](https://github.com/spree/spree-guides/tree/master). You may make edits to the guide in your fork and then pull request for them to be updated to this site.
+Improvements to the documentation are encouraged. The primary source of documentation are the guides (_HINT: You are reading one now._). You may make edits to the guide in your fork and then pull request for them to be updated to this site.
 
 To build the documentation normally simply clone and install.
 
 ```bash
-$ git clone git://github.com/spree/spree-guides.git
-$ cd spree-guides
+$ git clone git://github.com/spree/spree.git
+$ cd spree/guides
 $ bundle install
 $ bundle exec guides build
 ```
@@ -297,7 +297,3 @@ Certain blocks of text can be wrapped in sets of three characters, which will pl
 | !!! | Warnings. |
 | $$$ | TODO's |
 | --- | A title bar; especially useful for headings for code samples. |
-
-***
-We are always looking for people to help us maintain the guides.  If you are interested in making several contributions (or in helping us to manage the volunteer contributions) then please send an email to [spree-user](http://groups.google.com/group/spree-user) (be sure to include your GitHub username) and say that you would like to contribute.  We'll add you to the project so you can commit directly to the guides project without having to create pull requests.
-***

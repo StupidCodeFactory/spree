@@ -56,11 +56,9 @@ module Spree
         end
 
         def set_current_order
-          if user = try_spree_current_user
-            if cookies.signed[:guest_token].nil? && last_incomplete_order
-              cookies.permanent.signed[:guest_token] = last_incomplete_order.guest_token
-            elsif current_order && last_incomplete_order && current_order != last_incomplete_order
-              current_order.merge!(last_incomplete_order, user)
+          if try_spree_current_user && current_order
+            try_spree_current_user.orders.incomplete.where('id != ?', current_order.id).each do |order|
+              current_order.merge!(order, try_spree_current_user)
             end
           end
         end
@@ -74,12 +72,13 @@ module Spree
         end
 
         private
+
         def last_incomplete_order
           @last_incomplete_order ||= try_spree_current_user.last_incomplete_spree_order
         end
 
         def current_order_params
-          { currency: current_currency, guest_token: cookies.signed[:guest_token], user_id: try_spree_current_user.try(:id) }
+          { currency: current_currency, guest_token: cookies.signed[:guest_token], store_id: current_store.id, user_id: try_spree_current_user.try(:id) }
         end
 
         def find_order_by_token_or_user(options={}, with_adjustments = false)
@@ -93,7 +92,7 @@ module Spree
 
           # Find any incomplete orders for the current user
           if order.nil? && try_spree_current_user
-            order = Spree::Order.incomplete.order('id DESC').where({ currency: current_currency, user_id: try_spree_current_user.try(:id)}).first
+            order = last_incomplete_order
           end
 
           order

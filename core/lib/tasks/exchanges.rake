@@ -4,8 +4,8 @@ namespace :exchanges do
   task charge_unreturned_items: :environment do
 
     unreturned_return_items =  Spree::ReturnItem.awaiting_return.exchange_processed.joins(:exchange_inventory_unit).where([
-      "spree_inventory_units.created_at < :days_ago",
-      days_ago: Spree::Config[:expedited_exchanges_days_window].days.ago
+      "spree_inventory_units.created_at < :days_ago AND spree_inventory_units.state = :iu_state",
+      days_ago: Spree::Config[:expedited_exchanges_days_window].days.ago, iu_state: "shipped"
     ]).to_a
 
     # Determine that a return item has already been deemed unreturned and therefore charged
@@ -19,9 +19,13 @@ namespace :exchanges do
         inventory_units = return_items.map(&:exchange_inventory_unit)
 
         original_order = shipment.order
-        order = Spree::Order.create!(bill_address: original_order.bill_address,
-                                    ship_address: original_order.ship_address,
-                                    email: original_order.email)
+        order_attributes = {
+          bill_address: original_order.bill_address,
+          ship_address: original_order.ship_address,
+          email: original_order.email
+        }
+        order_attributes[:store_id] = original_order.store_id
+        order = Spree::Order.create!(order_attributes)
 
         order.associate_user!(original_order.user) if original_order.user
 

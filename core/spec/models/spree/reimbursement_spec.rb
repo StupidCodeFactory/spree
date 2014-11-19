@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Spree::Reimbursement do
+describe Spree::Reimbursement, :type => :model do
 
   describe ".before_create" do
     describe "#generate_number" do
@@ -18,7 +18,7 @@ describe Spree::Reimbursement do
         let(:reimbursement) { Spree::Reimbursement.new(number: nil) }
 
         before do
-          reimbursement.stub(valid?: true)
+          allow(reimbursement).to receive_messages(valid?: true)
         end
 
         it "should assign number with random RI number" do
@@ -92,7 +92,7 @@ describe Spree::Reimbursement do
       expect {
         subject
       }.to change{ Spree::Refund.count }.by(1)
-      Spree::Refund.last.amount.should eq order.total
+      expect(Spree::Refund.last.amount).to eq order.total
     end
 
     context 'with additional tax' do
@@ -129,7 +129,7 @@ describe Spree::Reimbursement do
       let!(:non_return_refund) { create(:refund, amount: 1, payment: payment) }
 
       it 'raises IncompleteReimbursement error' do
-        expect { subject }.to raise_error(Spree::Reimbursement::IncompleteReimbursement)
+        expect { subject }.to raise_error(Spree::Reimbursement::IncompleteReimbursementError)
       end
     end
 
@@ -142,12 +142,17 @@ describe Spree::Reimbursement do
       end
     end
 
+    it "triggers the reimbursement mailer to be sent" do
+      expect(Spree::ReimbursementMailer).to receive(:reimbursement_email).with(reimbursement.id) { double(deliver: true) }
+      subject
+    end
+
   end
 
   describe "#return_items_requiring_exchange" do
     it "returns only the return items that require an exchange" do
       return_items = [double(exchange_required?: true), double(exchange_required?: true),double(exchange_required?: false)]
-      subject.stub(:return_items) { return_items }
+      allow(subject).to receive(:return_items) { return_items }
       expect(subject.return_items_requiring_exchange).to eq return_items.take(2)
     end
   end

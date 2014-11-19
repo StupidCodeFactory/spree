@@ -6,9 +6,14 @@ module Spree
     has_many :classifications, -> { order(:position) }, dependent: :delete_all, inverse_of: :taxon
     has_many :products, through: :classifications
 
+    has_and_belongs_to_many :prototypes, join_table: :spree_taxons_prototypes
+
     before_create :set_permalink
 
     validates :name, presence: true
+    validates :meta_keywords, length: { maximum: 255 }
+    validates :meta_description, length: { maximum: 255 }
+    validates :meta_title, length: { maximum: 255 }
 
     after_touch :touch_ancestors_and_taxonomy
 
@@ -36,7 +41,7 @@ module Spree
 
     # Return meta_title if set otherwise generates from root name and/or taxon name
     def seo_title
-      if meta_title
+      unless meta_title.blank?
         meta_title
       else
         root? ? name : "#{root.name} - #{name}"
@@ -58,8 +63,7 @@ module Spree
     end
 
     def active_products
-      scope = products.active
-      scope
+      products.active
     end
 
     def pretty_name

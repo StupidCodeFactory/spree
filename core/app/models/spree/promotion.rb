@@ -20,21 +20,24 @@ module Spree
     validates_associated :rules
 
     validates :name, presence: true
-    validates :path, uniqueness: true, allow_blank: true
+    validates :path, uniqueness: { allow_blank: true }
     validates :usage_limit, numericality: { greater_than: 0, allow_nil: true }
     validates :description, length: { maximum: 255 }
 
     before_save :normalize_blank_values
 
     scope :coupons, ->{ where("#{table_name}.code IS NOT NULL") }
-    scope :applied, -> { joins(:orders).uniq }
+
+    order_join_table = reflect_on_association(:orders).join_table
+
+    scope :applied, -> { joins("INNER JOIN #{order_join_table} ON #{order_join_table}.promotion_id = #{table_name}.id").uniq }
 
     def self.advertised
       where(advertise: true)
     end
 
     def self.with_coupon_code(coupon_code)
-      where("lower(code) = ?", coupon_code.strip.downcase).first
+      where("lower(#{self.table_name}.code) = ?", coupon_code.strip.downcase).first
     end
 
     def self.active
